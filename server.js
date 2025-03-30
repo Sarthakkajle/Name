@@ -4,19 +4,13 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3090;  // Changed for Render compatibility
+const PORT = 3090;
 
 // Middleware to parse form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files (like your HTML)
-app.use(express.static(path.join(__dirname, 'public')));  // Added path.join for reliability
-
-// ========== ADDED THIS NEW ROUTE ========== //
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));  // Serves your HTML file
-});
-// ========================================== //
+app.use(express.static('public'));
 
 // Route to handle form submission
 app.post('/save-data', (req, res) => {
@@ -24,7 +18,7 @@ app.post('/save-data', (req, res) => {
     const data = `Name: ${name}\nSubmitted on: ${new Date().toLocaleString()}\n\n`;
 
     // Append data to file
-    fs.appendFile(path.join(__dirname, 'form-data.txt'), data, (err) => {  // Added path.join
+    fs.appendFile('form-data.txt', data, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error saving data');
